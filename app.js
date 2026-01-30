@@ -86,7 +86,7 @@ function listenToFirebaseUpdates() {
         window.listenToLocationUpdates((location) => {
             targetLocation = {
                 lat: location.lat,
-                lng: location.lng
+                lng: location.long  // Firebase uses 'long' not 'lng'
             };
             
             updateLocationDisplay('target', targetLocation);
@@ -170,12 +170,22 @@ function updateRoute() {
 
 // Update location display in sidebar
 function updateLocationDisplay(type, location) {
+    if (!location || location.lat === null || location.lat === undefined) {
+        return;
+    }
+    
+    const lng = location.lng !== undefined ? location.lng : location.long;
+    
+    if (lng === null || lng === undefined) {
+        return;
+    }
+    
     if (type === 'current') {
         document.getElementById('currentLat').textContent = location.lat.toFixed(6);
-        document.getElementById('currentLng').textContent = location.lng.toFixed(6);
+        document.getElementById('currentLng').textContent = lng.toFixed(6);
     } else if (type === 'target') {
         document.getElementById('targetLat').textContent = location.lat.toFixed(6);
-        document.getElementById('targetLng').textContent = location.lng.toFixed(6);
+        document.getElementById('targetLng').textContent = lng.toFixed(6);
     }
 }
 
