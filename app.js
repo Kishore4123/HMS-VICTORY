@@ -48,8 +48,8 @@ function startLocationTracking() {
         watchId = navigator.geolocation.watchPosition(
             (position) => {
                 currentLocation = {
-                    lat: position.coords.lat,
-                    lng: position.coords.long
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
                 };
                 
                 // Update marker
@@ -86,7 +86,7 @@ function listenToFirebaseUpdates() {
         window.listenToLocationUpdates((location) => {
             targetLocation = {
                 lat: location.lat,
-                lng: location.long
+                lng: location.lng
             };
             
             updateLocationDisplay('target', targetLocation);
