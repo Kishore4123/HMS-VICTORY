@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VICTORY'S CONSOLE</title>
+    <link rel="stylesheet" href="cockpit.css">
+</head>
+<body>
+    <div class="cockpit-container">
+        <!-- Top Header Bar -->
+        <header class="cockpit-header">
+            <div class="header-left">
+                <h1 class="system-title"><img src="./eagle.png" alt="VICTORY" height="40" width ="40"> HMS VICTORY</h1>
+                <p class="system-status" id="systemStatus">SYSTEM ONLINE</p>
+            </div>
+            <div class="header-center">
+                <div class="mission-timer">
+                    <span class="timer-label">UPTIME</span>
+                    <span class="timer-value" id="uptimeValue">00:00:00</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="time-display" id="timeDisplay">00:00:00</div>
+                <div class="gps-signal">
+                    <span class="signal-strength" id="signalBars">●●●●●</span>
+                    <span class="signal-label">GPS SAT</span>
+                </div>
+                <div class="connection-status">
+                    <div class="pulse-dot" id="pulseIndicator"></div>
+                    <span class="connection-text">CONNECTED</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Cockpit Display -->
+        <main class="cockpit-main">
+            <!-- Left Panel -->
+            <section class="cockpit-panel left-panel">
+                <div class="panel-header">VEHICLE STATUS</div>
+                
+                <div class="status-display">
+                    <div class="status-item">
+                        <div class="status-label">ALTITUDE</div>
+                        <div class="status-value" id="altitudeValue">0.0</div>
+                        <div class="status-unit">m</div>
+                    </div>
+                    
+                    <div class="status-item">
+                        <div class="status-label">BATTERY</div>
+                        <div class="battery-bar">
+                            <div class="battery-fill" id="batteryFill"></div>
+                        </div>
+                        <div class="status-value" id="batteryValue">100%</div>
+                    </div>
+                    
+                    <div class="status-item">
+                        <div class="status-label">SPEED</div>
+                        <div class="status-value" id="speedValue">0.0</div>
+                        <div class="status-unit">km/h</div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="system-info">
+                    <div class="info-row">
+                        <span class="info-label">Mode:</span>
+                        <span class="info-value mode-stable">AUTO</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Signal:</span>
+                        <span class="info-value signal-good">STRONG</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">CPU:</span>
+                        <span class="info-value" id="cpuUsage">45%</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="hardware-controls">
+                    <div class="control-header">HARDWARE MODULES</div>
+                    <button class="hardware-btn" id="cameraBtn" onclick="toggleCamera()">
+                        <span class="hw-icon">📷</span>
+                        <span class="hw-label">CAMERA</span>
+                    </button>
+                    <button class="hardware-btn" id="gimbalBtn" onclick="toggleGimbal()">
+                        <span class="hw-icon">🎥</span>
+                        <span class="hw-label">GIMBAL</span>
+                    </button>
+                    <button class="hardware-btn" id="lidarBtn" onclick="toggleLidar()">
+                        <span class="hw-icon">🌐</span>
+                        <span class="hw-label">LiDAR</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Center Panel - Main Display -->
+            <section class="cockpit-panel center-panel">
+                <div class="panel-header">🎮 FLIGHT CONTROL SYSTEM</div>
+                
+                <div class="flight-modes">
+                    <button class="mode-btn active" data-mode="manual" onclick="setFlightMode('manual')">MANUAL</button>
+                    <button class="mode-btn" data-mode="stabilize" onclick="setFlightMode('stabilize')">STABILIZE</button>
+                    <button class="mode-btn" data-mode="auto" onclick="setFlightMode('auto')">AUTO</button>
+                    <button class="mode-btn" data-mode="rtl" onclick="setFlightMode('rtl')">Landing Gear ⚙️</button>
+                </div>
+                
+                <div class="artificial-horizon">
+                    <div class="horizon-line"></div>
+                    <div class="pitch-scale"></div>
+                    <div class="roll-indicator"></div>
+                    <div class="center-marker"></div>
+                    <div class="heading-indicator" id="headingIndicator">360°</div>
+                </div>
+
+                <div class="compass-display">
+                    <div class="compass-needle" id="compassNeedle"></div>
+                    <div class="compass-label">N</div>
+                    <div class="compass-label" style="transform: rotate(90deg) translateX(70px);">E</div>
+                    <div class="compass-label" style="transform: rotate(180deg) translateX(70px);">S</div>
+                    <div class="compass-label" style="transform: rotate(270deg) translateX(70px);">W</div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="nav-button-group">
+                    <button class="nav-button map-button" onclick="navigateToMap()">
+                        <span class="button-icon">🗺️</span>
+                        <span class="button-text">MAP VIEW</span>
+                    </button>
+                    <button class="nav-button video-button" onclick="openVideoFeed()">
+                        <span class="button-icon">📹</span>
+                        <span class="button-text">VIDEO</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Right Panel -->
+            <section class="cockpit-panel right-panel">
+                <div class="panel-header">⚙️ ADVANCED DIAGNOSTICS</div>
+                
+                <div class="gauge-container">
+                    <div class="gauge">
+                        <div class="gauge-label">ROTOR 1</div>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: 85%;"></div>
+                        </div>
+                        <div class="gauge-percent">85%</div>
+                    </div>
+                    
+                    <div class="gauge">
+                        <div class="gauge-label">ROTOR 2</div>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: 87%;"></div>
+                        </div>
+                        <div class="gauge-percent">87%</div>
+                    </div>
+                    
+                    <div class="gauge">
+                        <div class="gauge-label">ROTOR 3</div>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: 83%;"></div>
+                        </div>
+                        <div class="gauge-percent">83%</div>
+                    </div>
+                    
+                    <div class="gauge">
+                        <div class="gauge-label">ROTOR 4</div>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: 86%;"></div>
+                        </div>
+                        <div class="gauge-percent">86%</div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="alerts">
+                    <div class="alert-header">SYSTEM ALERTS</div>
+                    <div class="alert-item success">✓ All systems nominal</div>
+                    <div class="alert-item success">✓ GPS locked (12 SAT)</div>
+                    <div class="alert-item success">✓ IMU calibrated</div>
+                    <div class="alert-item success">✓ Motor health: OK</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="advanced-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Temp:</span>
+                        <span class="stat-value" id="tempValue">38°C</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Voltage:</span>
+                        <span class="stat-value" id="voltageValue">12.4V</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Current:</span>
+                        <span class="stat-value" id="currentValue">5.2A</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Control Bar -->
+        <footer class="cockpit-footer">
+            <div class="control-section">
+                <button class="control-btn" id="powerBtn" onclick="togglePower()">
+                    <span class="btn-icon">⚡</span> PWR
+                </button>
+                <button class="control-btn" id="recordBtn" onclick="toggleRecord()">
+                    <span class="btn-icon">⏺️</span> REC
+                </button>
+                <button class="control-btn" id="calibrateBtn" onclick="calibrate()">
+                    <span class="btn-icon">⚙️</span> CAL
+                </button>
+                <button class="control-btn" id="emergencyBtn" onclick="emergencyStop()">
+                    <span class="btn-icon">🚨</span> EMERGENCY
+                </button>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-indicator online" id="statusIndicator">● ONLINE</div>
+                <div class="flight-time">Uptime: <span id="flightTime">00:00</span></div>
+                <div class="distance-traveled">Distance: <span id="distanceTraveled">0.00</span> km</div>
+                <div class="link-quality">Link: <span id="linkQuality">98%</span></div>
+            </div>
+
+            <div class="version-info">
+                v3.2.1-NEXUS | Quad-Copter Dash © 2026 | Built for Excellence
+            </div>
+        </footer>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, update, push, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBaA-wkSsMnDz5hDpeIj9B1bFJEEiM3UOA",
+            authDomain: "drone-rescue-system.firebaseapp.com",
+            databaseURL: "https://drone-rescue-system-default-rtdb.firebaseio.com",
+            projectId: "drone-rescue-system",
+            storageBucket: "drone-rescue-system.appspot.com",
+            messagingSenderId: "891859396445",
+            appId: "1:891859396445:web:10351b69776babb7f9eab4"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Make Firebase and functions available globally
+        window.firebaseApp = app;
+        window.firebaseDb = db;
+        window.firebaseRef = ref;
+        window.firebaseSet = set;
+        window.firebaseUpdate = update;
+        window.firebasePush = push;
+        window.firebaseRemove = remove;
+    </script>
+    <script src="cockpit.js"></script>
+</body>
+</html>

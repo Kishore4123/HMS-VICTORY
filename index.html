@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Direction Guide - Quad Copter Dash</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Leaflet Routing Machine CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left-section">
+                <a href="home.html" class="back-button" title="Back to Cockpit Console">
+                    <span class="back-icon">⬅</span> COCKPIT
+                </a>
+                <div class="header-title">
+                    <h1>🗺️ Live Direction Guide</h1>
+                    <p id="status" class="status">Initializing...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div id="map" class="map"></div>
+            
+            <div class="sidebar">
+                <div class="panel">
+                    <h3>📍 Current Location</h3>
+                    <div id="currentLocation" class="location-info">
+                        <p>Latitude: <span id="currentLat">--</span></p>
+                        <p>Longitude: <span id="currentLng">--</span></p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h3>🎯 Target Location (Firebase)</h3>
+                    <div id="targetLocation" class="location-info">
+                        <p>Latitude: <span id="targetLat">--</span></p>
+                        <p>Longitude: <span id="targetLng">--</span></p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h3>📊 Route Info</h3>
+                    <div id="routeInfo" class="location-info">
+                        <p>Distance: <span id="distance">--</span> km</p>
+                        <p>Duration: <span id="duration">--</span> min</p>
+                        <p>Status: <span id="routeStatus">Waiting for data</span></p>
+                    </div>
+                </div>
+                
+                <button id="recenterBtn" class="btn">📍 Recenter Map</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBaA-wkSsMnDz5hDpeIj9B1bFJEEiM3UOA",
+            authDomain: "drone-rescue-system.firebaseapp.com",
+            databaseURL: "https://drone-rescue-system-default-rtdb.firebaseio.com",
+            projectId: "drone-rescue-system",
+            storageBucket: "drone-rescue-system.appspot.com",
+            messagingSenderId: "891859396445",
+            appId: "1:891859396445:web:10351b69776babb7f9eab4"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Make Firebase functions globally available
+        window.getLocationFromFirebase = function() {
+            const locationRef = ref(database, 'drone_status');
+            
+            return new Promise((resolve, reject) => {
+                onValue(locationRef, (snapshot) => {
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        resolve({
+                            latitude: data.latitude,
+                            longitude: data.longitude,
+                            timestamp: data.timestamp || new Date().getTime()
+                        });
+                    } else {
+                        reject(new Error("Location data not found in Firebase"));
+                    }
+                }, (error) => {
+                    reject(error);
+                });
+            });
+        };
+
+        // Real-time listener for location updates
+        window.listenToLocationUpdates = function(callback) {
+            const locationRef = ref(database, 'drone_status');
+            
+            onValue(locationRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    callback({
+                        latitude: data.latitude,
+                        longitude: data.longitude,
+                        timestamp: data.timestamp || new Date().getTime()
+                    });
+                }
+            }, (error) => {
+                console.error("Firebase listener error:", error);
+            });
+        };
+    </script>
+    
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Leaflet Routing Machine -->
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    
+    <!-- Main App -->
+    <script src="app.js"></script>
+</body>
+</html>
