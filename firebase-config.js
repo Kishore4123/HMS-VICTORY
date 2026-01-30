@@ -29,8 +29,8 @@ window.getLocationFromFirebase = function() {
                 const data = snapshot.val();
                 resolve({
                     // Updated keys to match 'lat', 'long', and 'type' from your image
-                    latitude: data.lat,
-                    longitude: data.long,
+                    lat: data.lat,
+                    long: data.long,
                     type: data.type,
                     timestamp: data.timestamp || new Date().getTime()
                 });
@@ -52,8 +52,8 @@ window.listenToLocationUpdates = function(callback) {
         if (snapshot.exists()) {
             const data = snapshot.val();
             callback({
-                latitude: data.lat,
-                longitude: data.long,
+                lat: data.lat,
+                long: data.long,
                 type: data.type,
                 timestamp: data.timestamp || new Date().getTime()
             });

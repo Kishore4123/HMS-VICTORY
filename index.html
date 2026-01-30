@@ -35,16 +35,16 @@
                 <div class="panel">
                     <h3>📍 Current Location</h3>
                     <div id="currentLocation" class="location-info">
-                        <p>Latitude: <span id="currentLat">--</span></p>
-                        <p>Longitude: <span id="currentLng">--</span></p>
+                        <p>lat: <span id="currentLat">--</span></p>
+                        <p>long: <span id="currentLng">--</span></p>
                     </div>
                 </div>
                 
                 <div class="panel">
                     <h3>🎯 Target Location (Firebase)</h3>
                     <div id="targetLocation" class="location-info">
-                        <p>Latitude: <span id="targetLat">--</span></p>
-                        <p>Longitude: <span id="targetLng">--</span></p>
+                        <p>lat: <span id="targetLat">--</span></p>
+                        <p>long: <span id="targetLng">--</span></p>
                     </div>
                 </div>
                 
@@ -91,8 +91,8 @@
                     if (snapshot.exists()) {
                         const data = snapshot.val();
                         resolve({
-                            latitude: data.latitude,
-                            longitude: data.longitude,
+                            lat: data.lat,
+                            long: data.long,
                             timestamp: data.timestamp || new Date().getTime()
                         });
                     } else {
@@ -112,8 +112,8 @@
                 if (snapshot.exists()) {
                     const data = snapshot.val();
                     callback({
-                        latitude: data.latitude,
-                        longitude: data.longitude,
+                        lat: data.lat,
+                        long: data.long,
                         timestamp: data.timestamp || new Date().getTime()
                     });
                 }

@@ -51,8 +51,8 @@ Quad-Copter's Dash/
 ```json
 {
   "drone_status": {
-    "latitude": 40.7128,
-    "longitude": -74.0060,
+    "lat": 40.7128,
+    "long": -74.0060,
     "timestamp": 1234567890
   }
 }
@@ -223,8 +223,8 @@ if (lidarActive) {
 ### Firebase Real-time Updates
 ```javascript
 window.listenToLocationUpdates((location) => {
-    // location.latitude
-    // location.longitude
+    // location.lat
+    // location.long
     // location.timestamp
 });
 ```
@@ -232,8 +232,8 @@ window.listenToLocationUpdates((location) => {
 ### Geolocation API
 ```javascript
 navigator.geolocation.watchPosition((position) => {
-    // position.coords.latitude
-    // position.coords.longitude
+    // position.coords.lat
+    // position.coords.long
     // position.coords.accuracy
 });
 ```
